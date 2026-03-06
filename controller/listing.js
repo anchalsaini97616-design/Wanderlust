@@ -81,18 +81,18 @@ module.exports.destroy=(async(req,res)=>{
     req.flash("success","listing deleted");
     res.redirect("/listing");
 });
-module.exports.index=async(req,res)=>{
+module.exports.filterIndex=async(req,res)=>{
         const{category}=req.query;
         console.log("Query Category:",category);
         let alllistings;
         if(category){
-            alllistings=await Listing.find({category:{$regex:category,$options:"i"}});
+            alllistings=await Listing.find({category:category});
         }else{
             alllistings=await Listing.find({});
         }
         res.render("listing/index.ejs",{alllistings});
     };
-module.exports.index=async(req,res)=>{
+module.exports.searchIndex=async(req,res)=>{
         const{search}=req.query;
         let alllistings;
         if(search){

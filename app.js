@@ -1,12 +1,10 @@
 if(process.env.NODE_ENV !="production"){
 require('dotenv').config();
 }
-console.log("DB URL:",process.env.ATLASDB_URL);
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
-// const dbUrl=process.env.ATLASDB_URL;
 const path=require("path");
 const methodOverride=require("method-override");
 app.use(methodOverride("_method"));
@@ -38,7 +36,7 @@ app.use(express.static(path.join(__dirname,"public")));
 
 
 const sessionOptions=({
-    secret:"mysupersecretcode",
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -47,9 +45,7 @@ const sessionOptions=({
         httpOnly:true
     },
 });
-// app.get("/",(req,res)=>{
-//     res.send("i am working root");
-// });
+
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -66,14 +62,6 @@ app.use((req,res,next)=>{
     next();
 });
 
-// app.get("/demouser",async(req,res)=>{
-//     let fakeUser=new User({
-//         email:"student@gmail.com",
-//         username:"delta-student"
-//     });
-//     let registeredUser=await User.register(fakeUser,"helloworld");
-//     res.send(registeredUser);
-// });
 app.use("/listing",listingrouter);
 app.use("/listing/:id/reviews",reviewrouter);
 app.use("/",userrouter);
@@ -90,7 +78,6 @@ app.use((req,res,next)=>{
 app.use((err,req,res,next)=>{
     let{status=500,message="some error occured"}=err;
     res.status(status).render("error.ejs",{message});
-    // res.status(status).send(message);
 });
 app.listen(8080,()=>{
     console.log("server is running on port:8080");

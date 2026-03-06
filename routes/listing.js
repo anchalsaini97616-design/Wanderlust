@@ -13,6 +13,13 @@ router
 .get(wrapAsync(listingController.index))
 .post(isloggedIn,upload.single("image"),validateListing,wrapAsync(listingController.createNewForm));
 
+router
+.route("/filter")
+.get(wrapAsync(listingController.filterIndex));
+
+router
+.route("/search")
+.get(wrapAsync(listingController.searchIndex));
 //NEW ROUTE
 router.get("/new",isloggedIn,listingController.renderNewForm);
 
